@@ -1,0 +1,19 @@
+<table>
+    <thead>
+        <tr>
+            <th>UPC</th>
+            <th>Description</th>
+            <th>Department</th>
+
+        </tr>
+    </thead>
+
+
+{% for item in missed %}
+    <tr>
+        <td>{{ item.upc13 }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.department_id }}</td>
+    </tr>
+{% endfor %}
+</table>

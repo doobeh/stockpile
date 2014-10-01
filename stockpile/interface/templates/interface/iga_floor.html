@@ -1,0 +1,18 @@
+<table>
+<tr>
+    <td>Item ID</td>
+    <td>Description</td>
+    <td>Department</td>
+    <td>User</td>
+    <td>Created</td>
+</tr>
+{% for result in results %}
+    <tr>
+        <td>{{ result.item_id }}</td>
+        <td>{{ result.item.description }}</td>
+        <td>{{ result.item.department_id }}</td>
+        <td>{{ result.user }}</td>
+        <td>{{ result.created }}</td>
+    </tr>
+{% endfor %}
+</table>

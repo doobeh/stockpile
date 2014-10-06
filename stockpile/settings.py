@@ -14,6 +14,6 @@ class ProdConfig(Config):
 class DevConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://sales:margin@10.0.0.10/sales'
-    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_ECHO = False
     CACHE_TYPE = 'null'
     WTF_CSRF_ENABLED = True

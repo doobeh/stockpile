@@ -151,11 +151,55 @@ class StockPile(db.Model):
     weight = db.Column(db.Integer, default=0)
     quantity = db.Column(db.Integer)
     store = db.Column(db.Integer)
-    type = db.Column(db.Integer) #1=Sale, 2=Adjustment, 3=Transfer, 4=Physical
+    type = db.Column(db.Integer)  # 1=Sale, 2=Adjustment, 3=Transfer, 4=Physical
     created = db.Column(db.DateTime)
+    user = db.Column(db.String)
     logged = db.Column(db.DateTime, default=datetime.now)
     reference = db.Column(db.String(200))
+    amount = db.Column(db.Integer, default=0)
     identifier = db.Column(db.String(200))
+    item = db.relationship("Item", backref="stockpile", lazy='joined')
+
+    @classmethod
+    def from_physical(cls, record):
+        pile = cls()
+        pile.type = 4
+        pile.created = record.created
+        if record.item:
+            pile.item_id = record.item_id
+        pile.quantity = record.quantity
+        pile.store = record.store
+        pile.reference = '{}'.format(record.id)
+        pile.user = record.user
+        return pile
+
+    @classmethod
+    def from_sale(cls, sale, store):
+        pile = cls()
+        pile.type = 1
+        pile.item_id = sale["product"]
+        pile.weight = sale["weight"]
+        pile.quantity = sale["qty"] * -1
+        pile.amount = sale["amount"]
+        pile.store = store
+        pile.created = datetime.combine(sale["date"], sale["time"])
+        pile.reference = '{}:{}'.format(sale["pos"], sale["ticket"])
+        pile.user = 'SALE'
+        return pile
+
+    @classmethod
+    def from_iss_row(cls, plu, dt, sales, quantity, store, weight=0):
+        pile = cls()
+        pile.type = 1
+        pile.item_id = plu
+        pile.weight = weight
+        pile.quantity = quantity * -1
+        pile.amount = sales
+        pile.store = store
+        pile.created = dt
+        pile.reference = 'ISSROW'
+        pile.user = 'SALE'
+        return pile
 
 
 class Physical(db.Model):

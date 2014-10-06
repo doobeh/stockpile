@@ -3,3 +3,4 @@ flask-sqlalchemy
 flask-wtf
 flask-security
 flask-script
+git+http://github.com/nwcell/psycopg2-windows.git@win32-py27#egg=psycopg2

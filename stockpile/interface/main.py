@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for
 from datetime import datetime, timedelta, date
 from sqlalchemy import func, not_
-from trickle import reader
+from trickle import reader_new, reader_old
 from collections import defaultdict
 
 from stockpile.models import Item, Physical
@@ -47,7 +47,7 @@ def missed_items():
                 first_occurence['{:013d}'.format(item.item_id)] = item.created.time()
 
     dt = date(2014, 9, 30)
-    results = reader(location=store_locations.get('001'), dt=dt)
+    results = reader_new(location=store_locations.get('001'), dt=dt)
 
     missed_items = list()
     for sale in results:
@@ -63,7 +63,7 @@ def missed_items():
                 pass
         else:
             # Sold by not scanned?!
-            if sale["product"].startswith(('0024','000000000')):
+            if sale["product"].startswith(('0024', '000000000')):
                 pass
             else:
                 missed_items.append(sale["product"])
@@ -75,8 +75,6 @@ def missed_items():
             not_scanned.append(item)
 
     return render_template('interface/missed_items.html', missed=not_scanned)
-
-
 
 
 @mod.route('/tick/')
